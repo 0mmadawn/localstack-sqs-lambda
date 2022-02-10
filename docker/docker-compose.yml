@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  localstack:
+    # https://github.com/localstack/localstack/issues/5160
+    image: localstack/localstack:0.13.0
+    environment:
+      # see document https://docs.localstack.cloud/localstack/configuration/
+      - SERVICES=sqs,lambda
+      - DEFAULT_REGION=us-east-1
+      - DATA_DIR=/tmp/localstack/data
+      - LAMBDA_EXECUTOR=docker
+      # lambda log is output only when debug mode (perhaps...)
+      # error log is output even if not in debug mode, but success log is not so.
+      - DEBUG=1
+      # I was hoping the following statement would work
+      # - LS_LOG=info
+    volumes:
+      - ./localstack:/tmp/localstack
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    ports:
+      - 4566:4566
