@@ -9,7 +9,12 @@ services:
       - SERVICES=sqs,lambda
       - DEFAULT_REGION=us-east-1
       - DATA_DIR=/tmp/localstack/data
-      - LAMBDA_EXECUTOR=docker
+      # about LAMBDA_EXECUTOR, I think...
+      #   stability: docker > docker-reuse > local
+      #   speed:     docker < docker-reuse < local
+      # if you use docker-reuse mode, you have to stop lambda executing container(lambci/lambda:java11) manually.
+      # if you use docker mode and sqs, many zombie lambda executing containers are created(!?)
+      - LAMBDA_EXECUTOR=local
       # lambda log is output only when debug mode (perhaps...)
       # error log is output even if not in debug mode, but success log is not so.
       - DEBUG=1
